@@ -378,13 +378,19 @@ const makeSnippetDom = (snippet)=>{
     }
     return li;
 };
-const createSnippet = (name = null, content = null, { disabled = false, global = true, theme = false })=>{
+/**
+ *
+ * @param {string} name
+ * @param {string} content
+ * @param {{disabled?:boolean, global?:boolean, theme?:boolean}} options
+ */
+const createSnippet = (name = null, content = null, { disabled, global, theme } = {})=>{
     const snippet = new Snippet();
     if (name !== null) snippet.name = name;
     if (content !== null) snippet.content = content;
-    snippet.isDisabled = disabled;
-    snippet.isGlobal = global;
-    if (theme) {
+    snippet.isDisabled = disabled ?? false;
+    snippet.isGlobal = global ?? true;
+    if (theme ?? false) {
         if (!Object.keys(settings.themeSnippets).includes(power_user.theme)) {
             settings.themeSnippets[power_user.theme] = [];
         }
