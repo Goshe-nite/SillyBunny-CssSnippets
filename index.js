@@ -180,6 +180,14 @@ let collapser;
 /**@type {HTMLElement} */
 let list;
 
+const sanitize = (css)=>{
+    const style = document.createElement('style');
+    style.innerHTML = css;
+    document.head.append(style);
+    const sheet = style.sheet;
+    style.remove();
+    return Array.from(sheet.cssRules).map(it=>(it.cssText) ?? '').join('\n');
+};
 const updateCss = ()=>{
     if (!style) {
         style = document.createElement('style');
@@ -190,19 +198,21 @@ const updateCss = ()=>{
         '/*',
         ' * === GLOBAL SNIPPETS ===',
         ' */',
-        settings.snippetList
+        sanitize(settings.snippetList
             .filter(it=>!it.isDisabled && it.isGlobal)
             .map(it=>`/* SNIPPET: ${it.name} */\n${it.content}`)
             .join('\n\n'),
+        ),
         '\n\n\n\n',
         '/*',
         ' * === THEME SNIPPETS ===',
         ' */',
-        settings.themeSnippets[power_user.theme]
+        sanitize(settings.themeSnippets[power_user.theme]
             ?.map(name=>settings.snippetList.find(it=>!it.isDisabled && it.name == name))
             ?.filter(it=>it)
             ?.map(it=>`/* SNIPPET: ${it.name} */\n${it.content}`)
             ?.join('\n\n'),
+        ),
     ].join('\n');
     if (managerStyle) {
         managerStyle.innerHTML = style.innerHTML;
