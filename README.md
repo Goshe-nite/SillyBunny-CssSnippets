@@ -4,7 +4,7 @@ Adds a UI to manage custom CSS snippets.
 
 Snippets can be globally activated or linked to a specific theme.
 
-![](README/snippets.png)
+![](README/csss-01.png)
 
 
 
