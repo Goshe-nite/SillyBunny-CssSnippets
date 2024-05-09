@@ -1,3 +1,4 @@
+@import "hljs.css";
 html > body #CustomCSS-block > h4 {
   display: flex;
   gap: 1em;
@@ -175,9 +176,8 @@ html > body.csss--body #csss--list > .csss--snippet > .csss--nameWrap > .csss--a
 }
 html > body.csss--body #csss--list > .csss--snippet > .csss--contentWrap {
   flex: 1 1 auto;
-}
-html > body.csss--body #csss--list > .csss--snippet > .csss--contentWrap > .csss--content {
-  font-family: 'Courier New', Courier, monospace;
+  display: grid;
+  overflow: hidden;
 }
 html > body.csss--body .csss--listActions {
   display: flex;
@@ -199,9 +199,10 @@ html > body.csss--body > .csss--blocker > .csss--body {
   height: unset;
   min-height: unset;
   max-height: unset;
-  display: flex;
-  flex-direction: column;
   gap: 0.5em;
+  display: grid;
+  overflow: hidden;
+  grid-template-rows: 1fr 0fr;
 }
 html > body.csss--body > .csss--blocker > .csss--body > .csss--input {
   flex: 1 1 auto;
@@ -231,4 +232,51 @@ html > body.csss--body > .csss--filterMenu > .csss--item {
   display: flex;
   gap: 0.5em;
   align-items: baseline;
+}
+html > body.csss--body .csss--content,
+html > body.csss--body .csss--input,
+html > body.csss--body .csss--contentSyntaxInner {
+  font-family: 'Courier New', Courier, monospace;
+  padding: 0.75em;
+  margin: 0;
+  border: none;
+  line-height: 1.2;
+  border: 1px solid var(--SmartThemeBorderColor);
+  border-radius: 5px;
+  white-space: pre;
+  resize: none;
+  tab-size: 4;
+  max-height: unset;
+}
+html > body.csss--body .csss--contentSyntax {
+  grid-column: 1;
+  grid-row: 1;
+  padding: 0;
+  margin: 0;
+  border: none;
+  overflow: hidden;
+  min-width: 100%;
+  width: 0;
+  min-height: 100%;
+  height: 0;
+}
+html > body.csss--body .csss--contentSyntax > .csss--contentSyntaxInner {
+  background-color: #1f1f1f;
+  height: 100%;
+}
+html > body.csss--body .csss--content,
+html > body.csss--body .csss--input {
+  grid-column: 1;
+  grid-row: 1;
+  caret-color: white;
+  mix-blend-mode: difference;
+}
+html > body.csss--body .csss--content::-webkit-scrollbar,
+html > body.csss--body .csss--input::-webkit-scrollbar,
+html > body.csss--body .csss--content::-webkit-scrollbar-thumb,
+html > body.csss--body .csss--input::-webkit-scrollbar-thumb {
+  visibility: hidden;
+}
+html > body.csss--body .csss--content {
+  height: calc(6em * 1.2);
 }

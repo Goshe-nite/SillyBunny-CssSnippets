@@ -2,7 +2,7 @@ import { eventSource, event_types, saveSettingsDebounced } from '../../../../scr
 import { extension_settings } from '../../../extensions.js';
 import { power_user } from '../../../power-user.js';
 import { registerSlashCommand } from '../../../slash-commands.js';
-import { delay, getSortableDelay, isTrueBoolean, uuidv4 } from '../../../utils.js';
+import { debounce, delay, getSortableDelay, isTrueBoolean, uuidv4 } from '../../../utils.js';
 
 
 class Snippet {
@@ -410,9 +410,21 @@ const expand = (snippet, ta) => {
         const body = document.createElement('div'); {
             body.classList.add('csss--body');
             body.classList.add('drawer-content');
+            let synIn;
+            const syn = document.createElement('pre'); {
+                syn.classList.add('csss--contentSyntax');
+                synIn = document.createElement('code'); {
+                    synIn.classList.add('csss--contentSyntaxInner');
+                    synIn.classList.add('hljs');
+                    synIn.classList.add('language-css');
+                    syn.append(synIn);
+                }
+                body.append(syn);
+            }
             const inp = document.createElement('textarea'); {
                 inp.classList.add('csss--input');
                 inp.value = snippet.content;
+                inp.spellcheck = false;
                 inp.addEventListener('input', ()=>{
                     snippet.content = inp.value.trim();
                     ta.value = snippet.content;
@@ -420,6 +432,8 @@ const expand = (snippet, ta) => {
                 });
                 body.append(inp);
             }
+            addTabSupport(inp);
+            addSyntaxHighlight(inp, synIn, 'css');
             const ok = document.createElement('button'); {
                 ok.classList.add('csss--ok');
                 ok.textContent = 'OK';
@@ -530,6 +544,10 @@ const makeSnippetDom = (snippet)=>{
                 if (!noSave) snippet.save();
             });
         }
+        /**@type {HTMLElement} */
+        const contentSyntaxInner = li.querySelector('.csss--contentSyntaxInner');
+        addTabSupport(content);
+        addSyntaxHighlight(content, contentSyntaxInner, 'css');
         /**@type {HTMLElement} */
         const max = li.querySelector('.csss--max'); {
             max.addEventListener('click', ()=>{
@@ -929,4 +947,63 @@ const showCssManager = async()=>{
     };
     onUnloadBound = onUnload.bind(this);
     manager.addEventListener('unload', onUnloadBound);
+};
+
+
+
+/**
+ *
+ * @param {HTMLTextAreaElement} message
+ */
+const addTabSupport = (message)=>{
+    message.addEventListener('keydown', async(evt) => {
+        if (evt.key == 'Tab' && !evt.shiftKey && !evt.ctrlKey && !evt.altKey) {
+            evt.preventDefault();
+            const start = message.selectionStart;
+            const end = message.selectionEnd;
+            if (end - start > 0 && message.value.substring(start, end).includes('\n')) {
+                const lineStart = message.value.lastIndexOf('\n', start);
+                const count = message.value.substring(lineStart, end).split('\n').length - 1;
+                message.value = `${message.value.substring(0, lineStart)}${message.value.substring(lineStart, end).replace(/\n/g, '\n\t')}${message.value.substring(end)}`;
+                message.selectionStart = start + 1;
+                message.selectionEnd = end + count;
+                message.dispatchEvent(new Event('input', { bubbles:true }));
+            } else {
+                message.value = `${message.value.substring(0, start)}\t${message.value.substring(end)}`;
+                message.selectionStart = start + 1;
+                message.selectionEnd = end + 1;
+                message.dispatchEvent(new Event('input', { bubbles:true }));
+            }
+        } else if (evt.key == 'Tab' && evt.shiftKey && !evt.ctrlKey && !evt.altKey) {
+            evt.preventDefault();
+            const start = message.selectionStart;
+            const end = message.selectionEnd;
+            const lineStart = message.value.lastIndexOf('\n', start);
+            const count = message.value.substring(lineStart, end).split('\n\t').length - 1;
+            message.value = `${message.value.substring(0, lineStart)}${message.value.substring(lineStart, end).replace(/\n\t/g, '\n')}${message.value.substring(end)}`;
+            message.selectionStart = start - 1;
+            message.selectionEnd = end - count;
+            message.dispatchEvent(new Event('input', { bubble:true }));
+        }
+    });
+};
+
+const addSyntaxHighlight = (message, messageSyntaxInner, language)=>{
+    const updateScroll = () => {
+        messageSyntaxInner.scrollTop = message.scrollTop;
+        messageSyntaxInner.scrollLeft = message.scrollLeft;
+    };
+    const updateScrollDebounced = debounce(()=>updateScroll(), 0);
+
+    message.addEventListener('input', () => {
+        messageSyntaxInner.innerHTML = hljs.highlight(`${message.value}${message.value.slice(-1) == '\n' ? ' ' : ''}`, { language, ignoreIllegals:true })?.value;
+        updateScrollDebounced();
+    });
+    message.addEventListener('scroll', ()=>{
+        updateScrollDebounced();
+    });
+    message.style.color = 'transparent';
+    message.style.background = 'transparent';
+    message.style.setProperty('text-shadow', 'none', 'important');
+    messageSyntaxInner.innerHTML = hljs.highlight(`${message.value}${message.value.slice(-1) == '\n' ? ' ' : ''}`, { language, ignoreIllegals:true })?.value;
 };
