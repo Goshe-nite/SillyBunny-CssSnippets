@@ -2,6 +2,9 @@ import { eventSource, event_types, saveSettingsDebounced } from '../../../../scr
 import { extension_settings } from '../../../extensions.js';
 import { power_user } from '../../../power-user.js';
 import { registerSlashCommand } from '../../../slash-commands.js';
+import { SlashCommand } from '../../../slash-commands/SlashCommand.js';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from '../../../slash-commands/SlashCommandArgument.js';
+import { SlashCommandParser } from '../../../slash-commands/SlashCommandParser.js';
 import { debounce, delay, getSortableDelay, isTrueBoolean, uuidv4 } from '../../../utils.js';
 
 
@@ -135,18 +138,16 @@ const init = async()=>{
 
     themeLoop();
 
-    registerSlashCommand('csss',
-        (args, value)=>showCssManager(),
-        [],
-        '<span class="monospace"></span> – Show the CSS Snippet Manager.',
-        true,
-        true,
-    );
-    registerSlashCommand('csss-on',
-        (args, value)=>{
+    SlashCommandParser.addCommandObject(SlashCommand.fromProps({ name: 'csss',
+        callback: (args, value)=>showCssManager(),
+        helpString: 'Show the CSS Snippet Manager.',
+    }));
+    SlashCommandParser.addCommandObject(SlashCommand.fromProps({ name: 'csss-on',
+        callback: (args, value)=>{
             const snippet = settings.snippetList.find(it=>it.name.toLowerCase() == value.toLowerCase());
             if (!snippet) {
-                return toastr.warning(`No such snippet: ${value}`);
+                toastr.warning(`No such snippet: ${value}`);
+                return;
             }
             snippet.isDisabled = false;
             const sdm = snippetDomMapper.find(it=>it.snippet == snippet);
@@ -155,16 +156,20 @@ const init = async()=>{
             }
             snippet.save();
         },
-        [],
-        '<span class="monospace">(snippet name)</span> – Enable a CSS snippet.',
-        true,
-        true,
-    );
-    registerSlashCommand('csss-off',
-        (args, value)=>{
+        unnamedArgumentList: [
+            SlashCommandArgument.fromProps({ description: 'name of the snippet to enable',
+                typeList: [ARGUMENT_TYPE.STRING],
+                isRequired: true,
+            }),
+        ],
+        helpString: 'Enable a CSS snippet.',
+    }));
+    SlashCommandParser.addCommandObject(SlashCommand.fromProps({ name: 'csss-off',
+        callback: (args, value)=>{
             const snippet = settings.snippetList.find(it=>it.name.toLowerCase() == value.toLowerCase());
             if (!snippet) {
-                return toastr.warning(`No such snippet: ${value}`);
+                toastr.warning(`No such snippet: ${value}`);
+                return;
             }
             snippet.isDisabled = true;
             const sdm = snippetDomMapper.find(it=>it.snippet == snippet);
@@ -173,33 +178,67 @@ const init = async()=>{
             }
             snippet.save();
         },
-        [],
-        '<span class="monospace">(snippet name)</span> – Disable a CSS snippet.',
-        true,
-        true,
-    );
-    registerSlashCommand('csss-create',
-        (args, value)=>{
+        unnamedArgumentList: [
+            SlashCommandArgument.fromProps({ description: 'name of the snippet to disable',
+                typeList: [ARGUMENT_TYPE.STRING],
+                isRequired: true,
+            }),
+        ],
+        helpString: 'Disable a CSS snippet.',
+    }));
+    SlashCommandParser.addCommandObject(SlashCommand.fromProps({ name: 'csss-create',
+        callback: (args, value)=>{
             createSnippet(args.name, value, {
                 disabled: isTrueBoolean(args.disabled ?? 'false'),
                 global: isTrueBoolean(args.global ?? 'true'),
                 theme: isTrueBoolean(args.theme ?? 'false'),
             });
         },
-        [],
-        '<span class="monospace">[name=snippetName] [optional disabled=true|false] [optional global=true|false] [optional theme=true|false] (CSS)</span> – Create a new CSS snippet.',
-        true,
-        true,
-    );
-    registerSlashCommand('csss-delete',
-        (args, value)=>{
+        namedArgumentList: [
+            SlashCommandNamedArgument.fromProps({ name: 'name',
+                description: 'name of the new snippet',
+                typeList: [ARGUMENT_TYPE.STRING],
+                isRequired: true,
+            }),
+            SlashCommandNamedArgument.fromProps({ name: 'disabled',
+                description: 'whether the snippet is disabled',
+                typeList: [ARGUMENT_TYPE.BOOLEAN],
+                enumList: ['true', 'false'],
+                defaultValue: 'false',
+            }),
+            SlashCommandNamedArgument.fromProps({ name: 'global',
+                description: 'whether the snippet is global',
+                typeList: [ARGUMENT_TYPE.BOOLEAN],
+                enumList: ['true', 'false'],
+                defaultValue: 'true',
+            }),
+            SlashCommandNamedArgument.fromProps({ name: 'theme',
+                description: 'whether the snippet is for the current theme',
+                typeList: [ARGUMENT_TYPE.BOOLEAN],
+                enumList: ['true', 'false'],
+                defaultValue: 'false',
+            }),
+        ],
+        unnamedArgumentList: [
+            SlashCommandArgument.fromProps({ description: 'CSS content',
+                typeList: [ARGUMENT_TYPE.STRING],
+                isRequired: true,
+            }),
+        ],
+        helpString: 'Create a new CSS snippet.',
+    }));
+    SlashCommandParser.addCommandObject(SlashCommand.fromProps({ name: 'csss-delete',
+        callback: (args, value)=>{
             deleteSnippetByName(value);
         },
-        [],
-        '<span class="monospace">(snippet name)</span> – Delete a CSS snippet.',
-        true,
-        true,
-    );
+        unnamedArgumentList: [
+            SlashCommandArgument.fromProps({ description: 'name of the snippet to delete',
+                typeList: [ARGUMENT_TYPE.STRING],
+                isRequired: true,
+            }),
+        ],
+        helpString: 'Delete a CSS snippet.',
+    }));
 };
 const themeLoop = async()=>{
     let theme = power_user.theme;
