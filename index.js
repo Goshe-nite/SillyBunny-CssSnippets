@@ -585,7 +585,7 @@ const makeSnippetDom = (snippet)=>{
                 if (snippet.isTheme) {
                     snippet.themeList.splice(snippet.themeList.indexOf(power_user.theme), 1);
                 } else {
-                    snippet.themeList.push(snippet.name);
+                    snippet.themeList.push(power_user.theme);
                 }
                 if (!noSave) snippet.save();
             });
