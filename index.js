@@ -15,7 +15,7 @@ class Snippet {
             props.isCollapsed = props.isCollapsedd;
             delete props.isCollapsedd;
         }
-        if (props.themeList !== undefined) {
+        if (props.themeList === undefined) {
             props.themeList = Object.keys((settingsProps ?? settings).themeSnippets).filter(key=>(settingsProps ?? settings).themeSnippets[key]?.includes(props.name));
         }
         return Object.assign(new this(), props);
