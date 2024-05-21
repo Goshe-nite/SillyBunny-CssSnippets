@@ -580,7 +580,7 @@ const makeSnippetDom = (snippet)=>{
         }
         /**@type {HTMLInputElement} */
         const isTheme = li.querySelector('.csss--isTheme'); {
-            isTheme.checked = settings.themeSnippets[power_user.theme]?.find(it=>it == snippet.name);
+            isTheme.checked = snippet.isTheme;
             isTheme.addEventListener('click', ()=>{
                 if (snippet.isTheme) {
                     snippet.themeList.splice(snippet.themeList.indexOf(power_user.theme), 1);
