@@ -257,7 +257,6 @@ const themeLoop = async()=>{
         await delay(500);
     }
 };
-eventSource.on(event_types.APP_READY, ()=>init());
 
 
 
@@ -1066,3 +1065,9 @@ const addSyntaxHighlight = (message, messageSyntaxInner, language)=>{
     message.style.setProperty('text-shadow', 'none', 'important');
     messageSyntaxInner.innerHTML = hljs.highlight(`${message.value}${message.value.slice(-1) == '\n' ? ' ' : ''}`, { language, ignoreIllegals:true })?.value;
 };
+
+
+
+
+
+init();
