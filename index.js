@@ -1041,7 +1041,7 @@ const addTabSupport = (message)=>{
             message.value = `${message.value.substring(0, lineStart)}${message.value.substring(lineStart, end).replace(/\n\t/g, '\n')}${message.value.substring(end)}`;
             message.selectionStart = start - 1;
             message.selectionEnd = end - count;
-            message.dispatchEvent(new Event('input', { bubble:true }));
+            message.dispatchEvent(new Event('input', { bubbles:true }));
         }
     });
 };
