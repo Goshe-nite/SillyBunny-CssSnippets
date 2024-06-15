@@ -91,7 +91,7 @@ export class Snippet {
             const data = this.settings.getSynced();
             const oldSnippet = data.find(it=>it.id == this.id);
             if (oldSnippet) {
-                Object.assign(oldSnippet, this);
+                Object.assign(oldSnippet, this.toJSON());
             } else {
                 data.push(this);
             }
