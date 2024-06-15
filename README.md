@@ -2,7 +2,7 @@
 
 Adds a UI to manage custom CSS snippets.
 
-Snippets can be globally activated or linked to a specific theme.
+Snippets can be globally activated, linked to a specific theme, or linked to a specific chat (character / group).
 
 ![](README/csss-01.png)
 
@@ -23,6 +23,7 @@ Open **User Settings** and click on the button next to **Custom CSS**
 
 
 
-## Requirements
+## Dependencies
 
-SillyTavern version >=1.11.2
+- (*optional*) [Files Plugin](https://github.com/LenAnderson/SillyTavern-Files)  
+only required if you want to edit snippets in an external editor
