@@ -863,6 +863,7 @@ const showCssManager = async()=>{
                 }
             } catch { /* empty */ }
         }
+        settings.save();
     };
     dom.querySelector('#csss--import').addEventListener('click', ()=>imp.click());
     dom.addEventListener('paste', (evt)=>{
