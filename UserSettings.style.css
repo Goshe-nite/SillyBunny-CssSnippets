@@ -4,6 +4,10 @@
     left: 0;
     overflow: hidden;
     container-type: inline-size;
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background-color: var(--SmartThemeChatTintColor);
     &.csss--active {
         display: block;
     }

@@ -135,6 +135,7 @@ html > body.csss--body {
 			display: flex;
 			flex-direction: row;
 			gap: 0.5em;
+            align-items: baseline;
 			&:has(.csss--isDisabled:checked) {
 				opacity: 0.5;
 			}
@@ -163,9 +164,7 @@ html > body.csss--body {
 					display: none;
 				}
 				> .csss--actionsWrap {
-					// display: flex;
-					// flex-direction: row;
-					// gap: 0.5em;
+                    align-self: baseline;
 					grid-template-columns: 1fr 1fr 1fr 1fr;
 				}
 			}
@@ -195,6 +194,7 @@ html > body.csss--body {
 			}
 
 			> .csss--contentWrap {
+                align-self: normal;
 				flex: 1 1 auto;
 				display: grid;
 				overflow: hidden;

@@ -126,6 +126,7 @@ html > body.csss--body #csss--list > .csss--snippet {
   display: flex;
   flex-direction: row;
   gap: 0.5em;
+  align-items: baseline;
 }
 html > body.csss--body #csss--list > .csss--snippet:has(.csss--isDisabled:checked) {
   opacity: 0.5;
@@ -153,6 +154,7 @@ html > body.csss--body #csss--list > .csss--snippet.csss--isCollapsed > .csss--c
   display: none;
 }
 html > body.csss--body #csss--list > .csss--snippet.csss--isCollapsed > .csss--actionsWrap {
+  align-self: baseline;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 html > body.csss--body #csss--list > .csss--snippet > .csss--dragWrap {
@@ -178,6 +180,7 @@ html > body.csss--body #csss--list > .csss--snippet > .csss--nameWrap > .csss--a
   color: var(--SmartThemeQuoteColor);
 }
 html > body.csss--body #csss--list > .csss--snippet > .csss--contentWrap {
+  align-self: normal;
   flex: 1 1 auto;
   display: grid;
   overflow: hidden;
