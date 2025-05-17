@@ -10,14 +10,6 @@ import { debounce, delay, getSortableDelay, isTrueBoolean } from '../../../utils
 
 import './lib/prism-code-editor/prism/languages/css.js';
 import { highlightText } from './lib/prism-code-editor/prism/index.js';
-import { createEditor } from './lib/prism-code-editor/index.js';
-import { highlightBracketPairs } from './lib/prism-code-editor/extensions/matchBrackets/highlight.js';
-import { matchBrackets } from './lib/prism-code-editor/extensions/matchBrackets/index.js';
-import { indentGuides } from './lib/prism-code-editor/extensions/guides.js';
-import { defaultCommands } from './lib/prism-code-editor/extensions/commands.js';
-import { autoComplete, registerCompletions, fuzzyFilter } from './lib/prism-code-editor/extensions/autocomplete/index.js';
-import { cursorPosition } from './lib/prism-code-editor/extensions/cursor.js';
-import { cssCompletion } from './lib/prism-code-editor/extensions/autocomplete/css/index.js';
 
 import { Settings } from './src/Settings.js';
 import { Snippet } from './src/Snippet.js';
