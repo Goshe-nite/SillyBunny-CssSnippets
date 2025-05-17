@@ -485,7 +485,7 @@ const updateCss = ()=>{
         ),
         '\n\n\n\n',
         '/*',
-        ' * === CHAT SNIPPETS ===',
+        ' * === CHAR SNIPPETS ===',
         ' */',
         sanitize(settings.snippetList
             ?.filter(it=>!snips.includes(it) && it.isChat && (it.isTheme || it.themeList.length == 0) && !it.isDisabled)
@@ -619,7 +619,7 @@ const showThemes = (snippet) => {
 
                 contentContainer.append(document.createElement('hr'));
                 const h4Chats = document.createElement('h4'); {
-                    h4Chats.textContent = 'Chats';
+                    h4Chats.textContent = 'Chars';
                     contentContainer.append(h4Chats);
                 }
                 const contentChats = document.createElement('div'); {
