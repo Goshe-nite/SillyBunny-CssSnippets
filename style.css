@@ -231,6 +231,7 @@ html > body.csss--body > .csss--blocker > .csss--body.csss--expand {
 html > body.csss--body > .csss--blocker > .csss--body.csss--themes {
   display: flex;
   flex-direction: column;
+  background-color: var(--SmartThemeChatTintColor);
 }
 html > body.csss--body > .csss--blocker > .csss--body .csss--editor {
   display: grid;
@@ -255,6 +256,7 @@ html > body.csss--body > .csss--filterMenu > .csss--item {
   display: flex;
   gap: 1em;
   align-items: baseline;
+  background-color: var(--SmartThemeBlurTintColor);
 }
 .csss--themes .csss--themesContent {
   flex: 1 1 auto;
