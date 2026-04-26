@@ -19,13 +19,3 @@ https://github.com/LenAnderson/SillyTavern-CssSnippets/
 ## Usage
 
 Open **User Settings** and click on the button next to **Custom CSS**
-
-
-
-
-## Dependencies
-
-(*optional*) only required if you want to edit snippets in an external editor
-
-- Extension: [Files Plugin API](https://github.com/LenAnderson/SillyTavern-FilesPluginApi)
-- Server Plugin: [Files Plugin](https://github.com/LenAnderson/SillyTavern-Files)
