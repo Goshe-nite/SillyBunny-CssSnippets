@@ -2,7 +2,6 @@ import { characters, getRequestHeaders, this_chid } from '../../../../../script.
 import { getContext } from '../../../../extensions.js';
 import { power_user } from '../../../../power-user.js';
 import { delay, uuidv4 } from '../../../../utils.js';
-import { FilesPluginApi } from '../index.js';
 import { highlightText } from '../lib/prism-code-editor/prism/index.js';
 import { Settings } from './Settings.js';
 
@@ -110,51 +109,5 @@ export class Snippet {
         this.settings.save();
     }
 
-    async stopEditLocally() {
-        try {
-            await FilesPluginApi.unwatch(this.localPath);
-        } catch (ex) {
-            alert(ex?.message ?? 'something went wrong');
-        }
-        this.isWatching = false;
-    }
-    async editLocally() {
-        const path = `~/user/CustomCSS/${uuidv4()}.${this.name.replace(/[^a-z0-9_. ]+/gi, '-')}.css`;
-
-        try {
-            // save snippet to file
-            const blob = new Blob([this.content], { type:'text' });
-            const reader = new FileReader();
-            const prom = new Promise(resolve=>reader.addEventListener('load', resolve));
-            reader.readAsDataURL(blob);
-            await prom;
-            const result = await FilesPluginApi.put(path, { file:/**@type {string}*/(reader.result) });
-            const finalPath = `~/user/CustomCSS/${result.name}`;
-            this.localPath = finalPath;
-
-            // launch snippet file in local editor
-            await FilesPluginApi.open(finalPath);
-
-            // watch snippet file
-            this.isWatching = true;
-            const ev = await FilesPluginApi.watch(finalPath);
-            ev.addEventListener('message', async(/**@type {boolean}*/exists)=>{
-                if (exists) {
-                    this.content = await (await FilesPluginApi.get(finalPath)).text();
-                    this.li.querySelector('code').innerHTML = highlightText(this.content, 'css');
-                    this.save();
-                }
-            });
-
-            // wait for stop watching
-            while (this.isWatching) {
-                await delay(1000);
-            }
-
-            // delete snippet file
-            await FilesPluginApi.delete(finalPath);
-        } catch (ex) {
-            alert(ex?.message ?? 'something went wrong');
-        }
-    }
+    
 }

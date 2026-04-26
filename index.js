@@ -18,7 +18,6 @@ import { Snippet } from './src/Snippet.js';
 const NAME = new URL(import.meta.url).pathname.split('/').at(-2);
 const watchCss = async()=>{
     try {
-        const FilesPluginApi = (await import('../SillyTavern-FilesPluginApi/api.js')).FilesPluginApi;
         // watch CSS for changes
         const style = document.createElement('style');
         document.body.append(style);
@@ -30,17 +29,6 @@ const watchCss = async()=>{
         ].join('/');
         const mStyle = document.createElement('style');
         if (manager) manager.document.body.append(mStyle);
-        const ev = await FilesPluginApi.watch(path);
-        ev.addEventListener('message', async(/**@type {boolean}*/exists)=>{
-            if (!exists) return;
-            style.innerHTML = await (await FilesPluginApi.get(path)).text();
-            document.querySelector(`#third-party_${NAME}-css`)?.remove();
-            mStyle.innerHTML = style.innerHTML;
-            if (manager) {
-                manager.document.body.append(mStyle);
-                manager.document.querySelector(`#third-party_${NAME}-css`)?.remove();
-            }
-        });
     } catch { /* empty */ }
 };
 watchCss();
@@ -84,7 +72,7 @@ const initSettings = ()=>{
     }
 };
 const init = async()=>{
-    const h4 = document.querySelector('#CustomCSS-block > h4');
+    const div = document.querySelector('#CustomCSS-block > div');
     const btn = document.createElement('span'); {
         btn.classList.add('csss--trigger');
         btn.classList.add('menu_button');
@@ -93,13 +81,9 @@ const init = async()=>{
         btn.classList.add('fa-list-check');
         btn.title = 'Manage CSS snippets';
         btn.addEventListener('click', ()=>showCssManager());
-        h4.append(btn);
+        div.prepend(btn);
     }
     initSettings();
-    try {
-        FilesPluginApi = (await import('../SillyTavern-FilesPluginApi/api.js')).FilesPluginApi;
-        hasFilesPlugin = true;
-    } catch { /* empty */ }
     updateCss();
     addEventListener('beforeunload', ()=>manager?.close());
 
@@ -447,8 +431,6 @@ let collapser;
 let list;
 /**@type {Boolean} */
 let hasFilesPlugin = false;
-/**@type {typeof import('../SillyTavern-FilesPluginApi/api.js').FilesPluginApi} */
-export let FilesPluginApi;
 
 const sanitize = (css)=>{
     const style = document.createElement('style');
